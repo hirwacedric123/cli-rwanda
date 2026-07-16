@@ -1,20 +1,29 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useSyncExternalStore } from "react";
-
-function useMounted() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
-}
+import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const mounted = useMounted();
-  const isDark = mounted && resolvedTheme === "dark";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        aria-label="Toggle color theme"
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl"
+      >
+        <span className="h-5 w-5" aria-hidden />
+      </button>
+    );
+  }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <button
@@ -23,13 +32,7 @@ export function ThemeToggle() {
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:text-accent"
     >
-      {!mounted ? (
-        <span className="h-5 w-5" />
-      ) : isDark ? (
-        <SunIcon />
-      ) : (
-        <MoonIcon />
-      )}
+      {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }
