@@ -72,7 +72,10 @@ export default function HomePage() {
         </FadeIn>
       </Section>
 
-      <Section className="relative overflow-hidden border-y border-glass-border bg-gradient-to-br from-accent-soft/60 via-background to-earth-soft/60">
+      <Section
+        id="testimonials"
+        className="relative scroll-mt-36 overflow-hidden border-y border-glass-border bg-gradient-to-br from-accent-soft/60 via-background to-earth-soft/60"
+      >
         <div className="texture-noise pointer-events-none absolute inset-0 opacity-40" aria-hidden />
         <FadeIn>
           <div className="relative mx-auto mb-12 max-w-2xl text-center">
