@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type FadeInProps = {
   children: ReactNode;
@@ -12,8 +12,15 @@ type FadeInProps = {
 
 export function FadeIn({ children, className, delay = 0, y = 16 }: FadeInProps) {
   const reduce = useReducedMotion();
+  const [canAnimate, setCanAnimate] = useState(false);
 
-  if (reduce) {
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setCanAnimate(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Visible during SSR/hydration so content is never stuck at opacity 0.
+  if (reduce || !canAnimate) {
     return <div className={className}>{children}</div>;
   }
 
