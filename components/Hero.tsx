@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/content";
 
 export function Hero() {
   const reduce = useReducedMotion();
+  const [canAnimate, setCanAnimate] = useState(false);
 
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setCanAnimate(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Keep content visible during SSR/hydration; only fade in after mount.
   const fade = (delay = 0) =>
-    reduce
+    reduce || !canAnimate
       ? {}
       : {
           initial: { opacity: 0, y: 18 },
