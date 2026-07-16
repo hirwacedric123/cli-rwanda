@@ -34,18 +34,18 @@ export function Header() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[5.75rem] max-w-6xl items-center justify-between gap-5 rounded-[1.85rem] border border-glass-border bg-header-panel px-5 shadow-soft backdrop-blur-xl sm:px-6">
+      <div className="mx-auto flex h-[6.25rem] max-w-6xl items-center justify-between gap-5 rounded-[1.85rem] border border-glass-border bg-header-panel px-5 shadow-soft backdrop-blur-xl sm:px-6">
         <Link
           href="/"
           className="group flex items-center gap-3.5 rounded-full pr-2 transition-transform duration-300 hover:-translate-y-0.5"
           aria-label={`${site.fullName} home`}
         >
-          <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-[1.15rem] bg-logo-plate p-1.5 shadow-soft ring-1 ring-glass-border sm:h-16 sm:w-16">
+          <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-[1.25rem] bg-logo-plate p-1 shadow-soft ring-1 ring-glass-border sm:h-[4.5rem] sm:w-[4.5rem]">
             <Image
               src="/logo.jpeg"
               alt=""
-              width={56}
-              height={56}
+              width={72}
+              height={72}
               className="h-full w-full object-contain"
               priority
             />
