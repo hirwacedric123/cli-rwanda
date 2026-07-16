@@ -97,6 +97,39 @@ export const services = [
 
 export const homeHighlights = services.slice(0, 4);
 
+export const team = [
+  {
+    name: "Joy",
+    role: "Partnerships, proposals & sustainability",
+    image: "/team/joy.jpeg",
+    imageAlt: "Portrait of Joy",
+    bio: [
+      "Joy excels at crafting compelling proposals and building high-impact partnerships with governments, donors, and the private sector. Her strong analytical, communication, and stakeholder engagement skills enable companies to design and implement effective sustainability and climate resilience programs.",
+      "Committed to integrating gender equality and sustainability into all initiatives, Joy delivers professional writing and strategic support that turns corporate sustainability goals into successfully funded realities.",
+    ],
+  },
+  {
+    name: "Silas Emovwodo",
+    role: "Media, advocacy & communications",
+    image: "/team/silas.jpeg",
+    imageAlt: "Portrait of Silas Emovwodo",
+    bio: [
+      "Silas Emovwodo has over a decade of experience in academia, media, peace building, sustainable development and advocacy across Africa, Asia and North America.",
+      "He is skilled in donor research and engagement, proposal writing, crafting powerful visual and digital stories that amplify voices, drive advocacy, and strengthen organizational impact. With expertise in media production, digital advocacy, and gender-sensitive communication, he partners with NGOs, development organizations, and social enterprises to create compelling content—including documentaries, social media campaigns, photo/video projects, and strategic messaging—that resonates across local and global audiences.",
+      "Committed to integrating disability inclusion, gender equality, and sustainability into every initiative, Silas delivers professional media strategies, high-quality content creation, and communication capacity building that transform ideas into influential, audience-engaging realities.",
+    ],
+  },
+  {
+    name: "Shaka Ceesay",
+    role: "Nonprofit leadership & resource mobilization",
+    image: "/team/shaka.jpeg",
+    imageAlt: "Portrait of Shaka Ceesay",
+    bio: [
+      "Shaka Ceesay is a nonprofit executive with 15+ years of leadership in human rights, sustainable development, peacebuilding, and advocacy across Africa and North America. Skilled in organizational capacity needs assessment, donor research and engagement, grant writing, and project management, with a strong record of resource mobilization and cross-sector partnerships. Experienced in governance, strategic planning, and intercultural dialogue, committed to advancing gender equality, social justice, and community empowerment.",
+    ],
+  },
+] as const;
+
 export const testimonials = [
   {
     quote:
