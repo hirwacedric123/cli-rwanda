@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { Section } from "@/components/Section";
-import { about, values } from "@/lib/content";
+import { TeamMember } from "@/components/TeamMember";
+import { about, team, values } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about Consilium for Local Initiatives (CLI-Rwanda) — vision, mission, and values.",
+    "Learn about Consilium for Local Initiatives (CLI-Rwanda) — vision, mission, values, and team.",
 };
 
 export default function AboutPage() {
@@ -80,6 +81,32 @@ export default function AboutPage() {
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{value.description}</p>
               </div>
+            </FadeIn>
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        id="team"
+        className="relative scroll-mt-36 overflow-hidden border-y border-glass-border bg-gradient-to-br from-primary-soft/60 via-background to-accent-soft/60"
+      >
+        <div className="texture-noise pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+        <FadeIn>
+          <div className="relative mx-auto mb-12 max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Team</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              The people behind the counsel
+            </h2>
+            <p className="mt-4 leading-relaxed text-muted">
+              Practitioners in partnerships, communications, and nonprofit leadership — working
+              alongside local changemakers across Rwanda and beyond.
+            </p>
+          </div>
+        </FadeIn>
+        <div className="relative space-y-6">
+          {team.map((member, index) => (
+            <FadeIn key={member.name} delay={index * 0.06}>
+              <TeamMember {...member} />
             </FadeIn>
           ))}
         </div>
