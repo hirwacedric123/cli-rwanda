@@ -75,11 +75,17 @@
 
   /* Easing library */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --duration-micro: 90ms;
   --duration-fast: 140ms;
   --duration: 260ms;
-  --duration-slow: 420ms;
+  --duration-medium: 380ms;
+  --duration-slow: 520ms;
+  --duration-xslow: 700ms;
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -363,19 +369,8 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────────
-   Interactive lift — premium hover
+   Interactive lift — see full definition near bottom of file
 ───────────────────────────────────────────────────────────────── */
-.interactive-lift {
-  transition:
-    transform var(--duration) var(--ease-out),
-    box-shadow var(--duration) var(--ease-out);
-}
-
-.interactive-lift:hover,
-.interactive-lift:focus-visible {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
 
 /* ─────────────────────────────────────────────────────────────────
    Glass system — premium gradient-border glassmorphism
@@ -759,3 +754,175 @@ body {
 .dark .glow-accent { box-shadow: 0 0 32px rgba(76, 186, 232, 0.28); }
 .dark .glow-earth  { box-shadow: 0 0 32px rgba(84, 198, 124, 0.22); }
 .dark .glow-primary{ box-shadow: 0 0 32px rgba(232, 137, 78, 0.26); }
+
+/* ─────────────────────────────────────────────────────────────────
+   Keyframe library — organic motion primitives
+───────────────────────────────────────────────────────────────── */
+
+/* Orb A — slow, large amplitude, slight scale breath */
+@keyframes float-a {
+  0%   { transform: translateY(0px) scale(1); }
+  35%  { transform: translateY(-28px) scale(1.018); }
+  70%  { transform: translateY(-14px) scale(1.008); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* Orb B — mid-speed, diagonal drift */
+@keyframes float-b {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  40%  { transform: translate(16px, -20px) scale(1.012); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* Orb C — fast, small amplitude counter-phase */
+@keyframes float-c {
+  0%   { transform: translateY(0px) scale(1); }
+  50%  { transform: translateY(18px) scale(0.992); }
+  100% { transform: translateY(0px) scale(1); }
+}
+
+/* Glow orb breathe — opacity + scale pulse */
+@keyframes breathe-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 0.78; transform: scale(1.06); }
+}
+
+/* Dot pulse — scale + opacity */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.7); opacity: 0.5; }
+}
+
+/* Shimmer sweep — left-to-right luminance wave */
+@keyframes shimmer-sweep {
+  0%   { background-position: -250% center; }
+  100% { background-position: 250% center; }
+}
+
+/* Border glow rotate — animated gradient border */
+@keyframes border-spin {
+  from { --border-angle: 0deg; }
+  to   { --border-angle: 360deg; }
+}
+
+/* Slide up reveal — for mask-based text reveal */
+@keyframes slide-up-reveal {
+  from { transform: translateY(110%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Animation utility classes
+───────────────────────────────────────────────────────────────── */
+.animate-float-a {
+  animation: float-a 8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: transform;
+}
+
+.animate-float-b {
+  animation: float-b 11s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: -3.2s;
+  will-change: transform;
+}
+
+.animate-float-c {
+  animation: float-c 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: -1.8s;
+  will-change: transform;
+}
+
+.animate-breathe {
+  animation: breathe-glow 5s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.18) 48%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.18) 52%,
+    transparent 80%
+  );
+  background-size: 250% 100%;
+  animation: shimmer-sweep 2.4s var(--ease-expo) infinite;
+  animation-delay: 1.5s;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Card-premium — shimmer sweep on hover via ::after
+───────────────────────────────────────────────────────────────── */
+.card-premium {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-premium::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    108deg,
+    transparent 18%,
+    rgba(255, 255, 255, 0.07) 44%,
+    rgba(255, 255, 255, 0.13) 50%,
+    rgba(255, 255, 255, 0.07) 56%,
+    transparent 82%
+  );
+  background-size: 220% 100%;
+  background-position: -220% center;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    background-position 0ms ease;
+}
+
+.card-premium:hover::after {
+  opacity: 1;
+  background-position: 220% center;
+  transition:
+    opacity 180ms ease,
+    background-position 650ms var(--ease-expo);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Interactive lift — enhanced spring-like tactility
+───────────────────────────────────────────────────────────────── */
+.interactive-lift {
+  transition:
+    transform var(--duration-medium) var(--ease-expo),
+    box-shadow var(--duration-medium) var(--ease-expo);
+}
+
+.interactive-lift:hover,
+.interactive-lift:focus-visible {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: var(--shadow-xl);
+}
+
+.interactive-lift:active {
+  transform: translateY(-1px) scale(1.0);
+  transition-duration: var(--duration-fast);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Reduced-motion overrides for CSS animations
+───────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-a,
+  .animate-float-b,
+  .animate-float-c,
+  .animate-breathe,
+  .animate-pulse-dot,
+  .animate-shimmer {
+    animation: none !important;
+  }
+}
+
