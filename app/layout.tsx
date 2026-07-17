@@ -38,10 +38,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${fraunces.variable} ${dmSans.variable} h-full`}>
-      <body className="min-h-full flex flex-col font-sans antialiased">
+      <body className="flex min-h-full flex-col font-sans antialiased">
         <ThemeProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

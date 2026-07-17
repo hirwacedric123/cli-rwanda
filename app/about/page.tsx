@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandRail } from "@/components/BrandRail";
 import { FadeIn } from "@/components/FadeIn";
 import { Section } from "@/components/Section";
 import { TeamMember } from "@/components/TeamMember";
@@ -14,41 +15,40 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Section className="hero-atmosphere relative overflow-hidden !pb-16 !pt-16 md:!pt-24">
+      <Section className="hero-atmosphere relative overflow-hidden !pb-12 !pt-12 md:!pb-16 md:!pt-20">
         <div className="texture-noise pointer-events-none absolute inset-0 opacity-50" aria-hidden />
         <FadeIn>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">About</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-semibold tracking-tight text-primary md:text-5xl">
+          <BrandRail className="mb-4" />
+          <p className="eyebrow">About</p>
+          <h1 className="display-title mt-4 max-w-3xl text-[clamp(2.1rem,5vw,3.25rem)] text-primary">
             Consilium for Local Initiatives
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{about.intro}</p>
+          <p className="prose-muted mt-6 max-w-2xl text-lg">{about.intro}</p>
         </FadeIn>
       </Section>
 
-      <Section narrow className="!pt-8">
+      <Section narrow className="!pt-4 !pb-10 sm:!pb-12">
         <FadeIn>
-          <p className="text-base leading-relaxed text-foreground md:text-lg">{about.etymology}</p>
+          <p className="prose-muted text-base text-foreground md:text-lg">{about.etymology}</p>
         </FadeIn>
       </Section>
 
-      <Section className="bg-surface border-y border-border">
-        <div className="grid gap-10 lg:grid-cols-2">
+      <Section className="border-y border-border bg-surface">
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
           <FadeIn>
-            <article className="glass-panel h-full rounded-[1.75rem] p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Vision</p>
-              <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-foreground">
-                What we envision
-              </h2>
-              <p className="mt-5 leading-relaxed text-muted">{about.vision}</p>
+            <article className="glass-panel brand-panel-blue h-full rounded-[1.75rem] p-6 sm:p-8">
+              <BrandRail className="mb-4" />
+              <p className="eyebrow">Vision</p>
+              <h2 className="display-title mt-3 text-2xl text-foreground">What we envision</h2>
+              <p className="prose-muted mt-5">{about.vision}</p>
             </article>
           </FadeIn>
           <FadeIn delay={0.08}>
-            <article className="glass-panel h-full rounded-[1.75rem] p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-earth">Mission</p>
-              <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-foreground">
-                How we serve
-              </h2>
-              <div className="mt-5 space-y-4 leading-relaxed text-muted">
+            <article className="glass-panel brand-panel-green h-full rounded-[1.75rem] p-6 sm:p-8">
+              <BrandRail className="mb-4" />
+              <p className="eyebrow eyebrow-earth">Mission</p>
+              <h2 className="display-title mt-3 text-2xl text-foreground">How we serve</h2>
+              <div className="prose-muted mt-5 space-y-4">
                 {about.mission.map((paragraph) => (
                   <p key={paragraph.slice(0, 40)}>{paragraph}</p>
                 ))}
@@ -58,52 +58,60 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      <Section>
+      <Section className="brand-band-green relative overflow-hidden border-b border-glass-border">
+        <div className="texture-noise pointer-events-none absolute inset-0 opacity-30" aria-hidden />
         <FadeIn>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Our values</p>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          <BrandRail className="mb-4" />
+          <p className="eyebrow eyebrow-earth">Our values</p>
+          <h2 className="display-title mt-3 max-w-2xl text-[clamp(1.75rem,3.5vw,2.35rem)] text-foreground">
             What the mark represents
           </h2>
-          <p className="mt-4 max-w-2xl text-muted">
+          <p className="prose-muted mt-4 max-w-2xl">
             The CLI-Rwanda emblem reflects collaboration, African grounding, rising opportunity, and
             sustainable growth — the same principles that guide our advisory work.
           </p>
         </FadeIn>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {values.map((value, index) => (
-            <FadeIn key={value.title} delay={index * 0.05}>
-              <div className="glass-panel rounded-[1.5rem] p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/35">
-                <span className="font-display text-sm font-semibold text-earth">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-3 font-display text-xl font-semibold text-foreground">
-                  {value.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{value.description}</p>
-              </div>
-            </FadeIn>
-          ))}
+        <div className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6">
+          {values.map((value, index) => {
+            const panel =
+              index % 2 === 0 ? "brand-panel-green" : "brand-panel-blue";
+            const numberTone = index % 2 === 0 ? "text-earth" : "text-accent";
+            return (
+              <FadeIn key={value.title} delay={index * 0.05}>
+                <div className={`glass-panel interactive-lift ${panel} h-full rounded-[1.5rem] p-6`}>
+                  <span className={`font-display text-sm font-semibold ${numberTone}`}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-3 font-display text-xl font-semibold text-foreground">
+                    {value.title}
+                  </h3>
+                  <p className="prose-muted mt-2 text-sm">{value.description}</p>
+                </div>
+              </FadeIn>
+            );
+          })}
         </div>
       </Section>
 
       <Section
         id="team"
-        className="relative scroll-mt-36 overflow-hidden border-y border-glass-border bg-gradient-to-br from-primary-soft/60 via-background to-accent-soft/60"
+        className="brand-band-blue relative overflow-hidden border-b border-glass-border"
       >
-        <div className="texture-noise pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+        <div className="texture-noise pointer-events-none absolute inset-0 opacity-30" aria-hidden />
         <FadeIn>
-          <div className="relative mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Team</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          <div className="relative mx-auto mb-12 max-w-2xl text-center sm:mb-14">
+            <BrandRail className="mx-auto mb-4" />
+            <p className="eyebrow">Team</p>
+            <h2 className="display-title mt-3 text-[clamp(1.75rem,3.5vw,2.35rem)] text-foreground">
               The people behind the counsel
             </h2>
-            <p className="mt-4 leading-relaxed text-muted">
+            <p className="prose-muted mt-4">
               Practitioners in partnerships, communications, and nonprofit leadership — working
               alongside local changemakers across Rwanda and beyond.
             </p>
           </div>
         </FadeIn>
-        <div className="relative grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="relative grid items-stretch gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {team.map((member, index) => (
             <FadeIn key={member.name} delay={index * 0.07} className="h-full">
               <TeamMember {...member} index={index} />
@@ -114,13 +122,10 @@ export default function AboutPage() {
 
       <Section narrow className="!pt-0">
         <FadeIn>
-          <blockquote className="border-l-2 border-accent pl-6 font-display text-xl font-medium leading-snug text-foreground md:text-2xl">
+          <blockquote className="border-l-2 border-earth pl-5 font-display text-xl font-medium leading-snug text-foreground sm:pl-6 md:text-2xl">
             {about.closing}
           </blockquote>
-          <Link
-            href="/contact"
-            className="mt-10 inline-flex rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-white shadow-soft transition-all hover:bg-accent-hover"
-          >
+          <Link href="/contact" className="btn-primary mt-10">
             Partner with us
           </Link>
         </FadeIn>
