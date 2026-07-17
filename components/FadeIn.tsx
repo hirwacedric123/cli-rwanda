@@ -7,10 +7,30 @@ type FadeInProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
+  /** Vertical offset to start from (px). Default 24. */
   y?: number;
+  /** Horizontal offset to start from (px). Default 0. */
+  x?: number;
+  /** Apply blur-fade materialization effect. Default true. */
+  blur?: boolean;
+  /** Starting scale factor. Default 0.97. */
+  scale?: number;
+  /** Viewport margin before triggering. Default "-40px". */
+  margin?: string;
 };
 
-export function FadeIn({ children, className, delay = 0, y = 16 }: FadeInProps) {
+const EXPO_OUT = [0.16, 1, 0.3, 1] as const;
+
+export function FadeIn({
+  children,
+  className,
+  delay = 0,
+  y = 24,
+  x = 0,
+  blur = true,
+  scale = 0.97,
+  margin = "-40px",
+}: FadeInProps) {
   const reduce = useReducedMotion();
   const [canAnimate, setCanAnimate] = useState(false);
 
@@ -19,7 +39,6 @@ export function FadeIn({ children, className, delay = 0, y = 16 }: FadeInProps) 
     return () => cancelAnimationFrame(id);
   }, []);
 
-  // Visible during SSR/hydration so content is never stuck at opacity 0.
   if (reduce || !canAnimate) {
     return <div className={className}>{children}</div>;
   }
@@ -27,10 +46,28 @@ export function FadeIn({ children, className, delay = 0, y = 16 }: FadeInProps) 
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-48px", amount: 0.2 }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={{
+        opacity: 0,
+        y,
+        x,
+        scale,
+        filter: blur ? "blur(7px)" : "blur(0px)",
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        x: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      }}
+      viewport={{ once: true, margin, amount: 0.12 }}
+      transition={{
+        duration: 0.7,
+        delay,
+        ease: EXPO_OUT,
+        filter: { duration: 0.55, delay, ease: EXPO_OUT },
+        scale: { duration: 0.65, delay, ease: EXPO_OUT },
+      }}
     >
       {children}
     </motion.div>
