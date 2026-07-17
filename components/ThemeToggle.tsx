@@ -11,12 +11,20 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
+  const btnStyle = {
+    background:
+      "linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.10) 60%, rgba(255,255,255,0.22) 100%) border-box",
+    border: "1px solid transparent",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.80), var(--shadow-xs)",
+  };
+
   if (!mounted) {
     return (
       <button
         type="button"
         aria-label="Toggle color theme"
-        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl"
+        style={btnStyle}
         disabled
       >
         <span className="h-5 w-5" aria-hidden />
@@ -31,7 +39,8 @@ export function ThemeToggle() {
       type="button"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:text-accent active:translate-y-0"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl transition-all duration-260 hover:-translate-y-0.5 hover:text-accent active:translate-y-0"
+      style={btnStyle}
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
