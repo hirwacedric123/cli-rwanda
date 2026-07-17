@@ -103,10 +103,10 @@ export default function AboutPage() {
             </p>
           </div>
         </FadeIn>
-        <div className="relative space-y-6">
+        <div className="relative grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {team.map((member, index) => (
-            <FadeIn key={member.name} delay={index * 0.06}>
-              <TeamMember {...member} />
+            <FadeIn key={member.name} delay={index * 0.07} className="h-full">
+              <TeamMember {...member} index={index} />
             </FadeIn>
           ))}
         </div>
