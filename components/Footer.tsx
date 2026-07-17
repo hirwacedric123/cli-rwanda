@@ -37,14 +37,14 @@ export function Footer() {
             className="inline-flex min-h-[var(--touch)] items-center gap-3 rounded-full transition-opacity duration-200 hover:opacity-80"
           >
             <span
-              className="logo-plate-glass flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.85rem]"
+              className="logo-plate-glass flex h-12 w-[4.5rem] overflow-hidden rounded-xl"
             >
               <Image
-                src="/cli-logo-transparent.png"
+                src="/cli.png"
                 alt=""
-                width={48}
+                width={72}
                 height={48}
-                className="h-[80%] w-[80%] object-contain"
+                className="h-full w-full object-contain"
               />
             </span>
             <span>
