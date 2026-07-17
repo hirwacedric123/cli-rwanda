@@ -5,14 +5,22 @@ type SectionProps = {
   className?: string;
   id?: string;
   narrow?: boolean;
+  wide?: boolean;
 };
 
-export function Section({ children, className = "", id, narrow }: SectionProps) {
+export function Section({ children, className = "", id, narrow, wide }: SectionProps) {
+  const widthClass = narrow
+    ? "site-container-narrow"
+    : wide === false
+      ? "site-container"
+      : "site-container-wide";
+
   return (
-    <section id={id} className={`px-6 py-20 sm:py-24 md:py-28 ${className}`}>
-      <div className={`mx-auto w-full ${narrow ? "max-w-3xl" : "max-w-6xl"}`}>
-        {children}
-      </div>
+    <section
+      id={id}
+      className={`py-[var(--section-y)] ${id ? "scroll-mt-[var(--header-offset)]" : ""} ${className}`}
+    >
+      <div className={`w-full ${widthClass}`}>{children}</div>
     </section>
   );
 }
