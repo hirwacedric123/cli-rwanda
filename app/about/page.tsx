@@ -92,7 +92,7 @@ export default function AboutPage() {
       >
         <div className="texture-noise pointer-events-none absolute inset-0 opacity-40" aria-hidden />
         <FadeIn>
-          <div className="relative mx-auto mb-12 max-w-2xl">
+          <div className="relative mx-auto mb-14 max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Team</p>
             <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               The people behind the counsel
