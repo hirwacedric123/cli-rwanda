@@ -12,11 +12,11 @@ export function Footer() {
           <Link href="/" className="inline-flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-logo-plate shadow-soft ring-1 ring-border">
               <Image
-                src="/logo.jpeg"
+                src="/cli-logo-transparent.png"
                 alt=""
                 width={48}
                 height={48}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
             </span>
             <span>
