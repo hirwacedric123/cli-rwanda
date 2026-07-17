@@ -37,13 +37,7 @@ export function Footer() {
             className="inline-flex min-h-[var(--touch)] items-center gap-3 rounded-full transition-opacity duration-200 hover:opacity-80"
           >
             <span
-              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.85rem]"
-              style={{
-                background:
-                  "linear-gradient(rgba(255,255,255,0.72), rgba(255,255,255,0.72)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.15) 60%, rgba(255,255,255,0.28) 100%) border-box",
-                border: "1px solid transparent",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.85), var(--shadow-xs)",
-              }}
+              className="logo-plate-glass flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.85rem]"
             >
               <Image
                 src="/cli-logo-transparent.png"
