@@ -42,7 +42,7 @@ export function Header() {
         >
           <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-[1.25rem] bg-logo-plate p-1 shadow-soft ring-1 ring-glass-border sm:h-[4.5rem] sm:w-[4.5rem]">
             <Image
-              src="/logo.jpeg"
+              src="/cli-logo-transparent.png"
               alt=""
               width={72}
               height={72}
