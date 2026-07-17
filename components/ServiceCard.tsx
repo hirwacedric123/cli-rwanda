@@ -28,7 +28,7 @@ export function ServiceCard({
   return (
     <Link
       href={href}
-      className={`group card-premium flex h-full flex-col rounded-[1.5rem] p-6 focus-visible:ring-2 focus-visible:ring-accent/40 ${indexGlow(index)}`}
+      className={`group card-premium relative flex h-full flex-col rounded-[1.5rem] p-6 focus-visible:ring-2 focus-visible:ring-accent/40 ${indexGlow(index)}`}
     >
       {/* Index number — refined metallic */}
       <span
