@@ -129,14 +129,14 @@ export function Header() {
             onClick={() => setOpen(false)}
           >
             <span
-              className="logo-plate-glass flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.9rem] sm:h-13 sm:w-13 sm:rounded-[1.05rem]"
+              className="logo-plate-glass flex h-12 w-[4.5rem] overflow-hidden rounded-xl sm:h-14 sm:w-[5.25rem] sm:rounded-[1.1rem]"
             >
               <Image
-                src="/cli-logo-transparent.png"
+                src="/cli.png"
                 alt=""
-                width={56}
+                width={84}
                 height={56}
-                className="h-[78%] w-[78%] object-contain"
+                className="h-full w-full object-contain"
                 priority
               />
             </span>
