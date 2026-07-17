@@ -4,7 +4,8 @@ import { FadeIn } from "@/components/FadeIn";
 import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { ServiceCard } from "@/components/ServiceCard";
-import { about, homeHighlights, site, testimonials } from "@/lib/content";
+import { TeamMember } from "@/components/TeamMember";
+import { about, homeHighlights, site, team, testimonials } from "@/lib/content";
 
 export default function HomePage() {
   return (
@@ -99,6 +100,38 @@ export default function HomePage() {
             </p>
           </div>
         </FadeIn>
+      </Section>
+
+      {/* ── Team ── */}
+      <Section
+        id="team"
+        className="brand-band-green relative overflow-hidden border-b border-border"
+      >
+        <div className="texture-noise pointer-events-none absolute inset-0 opacity-25" aria-hidden />
+        <FadeIn>
+          <div className="relative mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <BrandRail className="mb-5" />
+              <p className="eyebrow eyebrow-earth">Team</p>
+              <h2 className="display-title mt-3 text-[clamp(1.75rem,3.5vw,2.35rem)] text-foreground">
+                The people behind the counsel
+              </h2>
+            </div>
+            <Link
+              href="/about#team"
+              className="inline-flex min-h-10 items-center text-sm font-semibold text-earth transition-all duration-200 hover:opacity-75"
+            >
+              Meet the full team →
+            </Link>
+          </div>
+        </FadeIn>
+        <div className="relative grid items-stretch gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          {team.map((member, index) => (
+            <FadeIn key={member.name} delay={index * 0.07} className="h-full">
+              <TeamMember {...member} index={index} />
+            </FadeIn>
+          ))}
+        </div>
       </Section>
 
       {/* ── Testimonials ── */}
