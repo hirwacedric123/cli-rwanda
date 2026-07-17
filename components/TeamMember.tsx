@@ -11,17 +11,17 @@ type TeamMemberProps = {
 
 export function TeamMember({ name, role, image, imageAlt, bio, index = 0 }: TeamMemberProps) {
   return (
-    <article className="glass-panel group flex h-full flex-col overflow-hidden rounded-[1.75rem] transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-md">
-      <div className="relative aspect-[5/6] shrink-0 overflow-hidden bg-primary-soft">
+    <article className="glass-panel interactive-lift group flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-within:border-accent/40">
+      <div className="relative aspect-[4/5] shrink-0 overflow-hidden bg-primary-soft sm:aspect-[5/6]">
         <Image
           src={image}
           alt={imageAlt}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover object-[center_18%] transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          className="object-cover object-[center_18%] transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"
           aria-hidden
         />
         <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
