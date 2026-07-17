@@ -3,14 +3,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { nav, site } from "@/lib/content";
 import { ThemeToggle } from "./ThemeToggle";
+
+function pathMatches(pathname: string, href: string) {
+  const [path, hash] = href.split("#");
+  const base = path || "/";
+  if (hash) {
+    if (base === "/" && pathname === "/") return false;
+    return pathname === base;
+  }
+  return pathname === base;
+}
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hash, setHash] = useState("");
+  const menuId = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -20,108 +34,197 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    const syncHash = () => setHash(window.location.hash.replace(/^#/, ""));
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+    setHash(window.location.hash.replace(/^#/, ""));
+  }, [pathname]);
+
+  useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab" || !panelRef.current) return;
+
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const firstLink = panelRef.current?.querySelector<HTMLElement>("a[href]");
+    firstLink?.focus();
+
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  function isActive(href: string) {
+    const [path, itemHash] = href.split("#");
+    const base = path || "/";
+
+    if (itemHash) {
+      return pathname === base && hash === itemHash;
+    }
+
+    if (href === "/") return pathname === "/" && !hash;
+    return pathMatches(pathname, href) && !["team", "testimonials"].includes(hash);
+  }
+
+  function handleNavClick(href: string) {
+    const [, itemHash] = href.split("#");
+    setHash(itemHash || "");
+    setOpen(false);
+  }
+
   return (
     <header
-      className={`sticky top-0 z-50 px-3 py-4 transition-all duration-300 ${
+      className={`sticky top-0 z-50 transition-colors duration-300 ${
         scrolled
-          ? "bg-[linear-gradient(to_bottom,var(--header-bg),transparent)]"
+          ? "bg-[linear-gradient(to_bottom,var(--header-bg)_0%,var(--header-bg)_55%,transparent_100%)]"
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[6.25rem] max-w-6xl items-center justify-between gap-5 rounded-[1.85rem] border border-glass-border bg-header-panel px-5 shadow-soft backdrop-blur-xl sm:px-6">
-        <Link
-          href="/"
-          className="group flex items-center gap-3.5 rounded-full pr-2 transition-transform duration-300 hover:-translate-y-0.5"
-          aria-label={`${site.fullName} home`}
-        >
-          <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-[1.25rem] bg-logo-plate p-1 shadow-soft ring-1 ring-glass-border sm:h-[4.5rem] sm:w-[4.5rem]">
-            <Image
-              src="/cli-logo-transparent.png"
-              alt=""
-              width={72}
-              height={72}
-              className="h-full w-full object-contain"
-              priority
-            />
-          </span>
-          <span className="hidden sm:flex flex-col leading-tight">
-            <span className="font-display text-xl font-semibold tracking-tight text-primary">
-              Consilium
-            </span>
-            <span className="text-[0.78rem] font-medium uppercase tracking-[0.14em] text-muted">
-              CLI-Rwanda
-            </span>
-          </span>
-        </Link>
-
-        <nav
-          className="hidden items-center gap-1.5 rounded-full border border-glass-border bg-white/70 p-1.5 shadow-inner backdrop-blur-xl dark:bg-white/[0.08] md:flex"
-          aria-label="Primary"
-        >
-          {nav.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-full px-5 py-3 text-base font-semibold transition-all duration-300 ${
-                  active
-                    ? "bg-surface text-primary shadow-sm"
-                    : "text-muted hover:bg-surface/70 hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
+      <div className="px-3 py-3 sm:px-4 sm:py-4">
+        <div className="site-container-wide flex h-[var(--header-height)] items-center justify-between gap-3 rounded-[1.35rem] border border-glass-border bg-header-panel px-3 shadow-soft backdrop-blur-xl sm:gap-4 sm:rounded-[1.6rem] sm:px-5">
           <Link
-            href="/contact"
-            className="hidden rounded-full bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-md sm:inline-flex"
+            href="/"
+            className="group flex min-h-[var(--touch)] items-center gap-2.5 rounded-full pr-1 transition-transform duration-300 hover:-translate-y-0.5 sm:gap-3.5"
+            aria-label={`${site.fullName} home`}
+            onClick={() => setOpen(false)}
           >
-            Get in touch
+            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-[1rem] bg-logo-plate p-1 shadow-soft ring-1 ring-glass-border sm:h-14 sm:w-14 sm:rounded-[1.15rem]">
+              <Image
+                src="/cli-logo-transparent.png"
+                alt=""
+                width={56}
+                height={56}
+                className="h-full w-full object-contain"
+                priority
+              />
+            </span>
+            <span className="hidden min-[400px]:flex flex-col leading-tight">
+              <span className="font-display text-lg font-semibold tracking-tight text-primary sm:text-xl">
+                Consilium
+              </span>
+              <span className="text-[0.7rem] font-medium uppercase tracking-[0.14em] text-muted sm:text-[0.78rem]">
+                CLI-Rwanda
+              </span>
+            </span>
           </Link>
-          <button
-            type="button"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl transition-colors hover:border-accent md:hidden"
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
+
+          <nav
+            className="hidden items-center gap-1 rounded-full border border-glass-border bg-white/70 p-1 shadow-inner backdrop-blur-xl dark:bg-white/[0.08] lg:flex"
+            aria-label="Primary"
           >
-            {open ? <CloseIcon /> : <MenuIcon />}
-          </button>
+            {nav.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-200 xl:px-5 xl:text-base ${
+                    active
+                      ? "bg-surface text-primary shadow-sm"
+                      : "text-muted hover:bg-surface/70 hover:text-foreground"
+                  }`}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
+            <Link href="/contact" className="btn-primary hidden sm:inline-flex !py-2.5 text-sm">
+              Get in touch
+            </Link>
+            <button
+              ref={toggleRef}
+              type="button"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-glass-border bg-glass-bg text-foreground shadow-sm backdrop-blur-xl transition-colors hover:border-accent lg:hidden"
+              aria-expanded={open}
+              aria-controls={menuId}
+              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen((v) => !v)}
+            >
+              {open ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
         </div>
       </div>
 
       <div
-        id="mobile-nav"
-        className={`mx-auto mt-3 max-w-6xl overflow-hidden rounded-[1.5rem] border border-glass-border bg-header-panel shadow-soft backdrop-blur-xl md:hidden ${
-          open ? "block" : "hidden"
+        className={`fixed inset-0 z-40 bg-foreground/25 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
+        aria-hidden={!open}
+        onClick={() => setOpen(false)}
+      />
+
+      <div
+        id={menuId}
+        ref={panelRef}
+        className={`absolute inset-x-3 top-[calc(var(--header-height)+1.35rem)] z-50 origin-top transition-all duration-300 sm:inset-x-4 lg:hidden ${
+          open
+            ? "translate-y-0 scale-100 opacity-100"
+            : "pointer-events-none -translate-y-2 scale-[0.98] opacity-0"
+        }`}
+        aria-hidden={!open}
       >
-        <nav className="flex flex-col gap-1 p-3" aria-label="Mobile">
+        <nav
+          className="site-container-wide flex flex-col gap-1 rounded-[1.35rem] border border-glass-border bg-header-panel p-3 shadow-soft backdrop-blur-xl"
+          aria-label="Mobile"
+        >
           {nav.map((item) => {
-            const active = pathname === item.href;
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
-                className={`rounded-2xl px-4 py-3 text-base font-semibold transition-colors ${
+                onClick={() => handleNavClick(item.href)}
+                className={`min-h-[var(--touch)] rounded-2xl px-4 py-3 text-base font-semibold transition-colors ${
                   active
                     ? "bg-surface text-primary shadow-sm"
                     : "text-foreground hover:bg-surface/70"
                 }`}
+                aria-current={active ? "page" : undefined}
               >
                 {item.label}
               </Link>
@@ -129,8 +232,8 @@ export function Header() {
           })}
           <Link
             href="/contact"
-            onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-accent px-4 py-3 text-center text-sm font-semibold text-white shadow-soft transition-colors hover:bg-accent-hover"
+            onClick={() => handleNavClick("/contact")}
+            className="btn-primary mt-2 w-full"
           >
             Get in touch
           </Link>
