@@ -11,7 +11,7 @@ type TeamMemberProps = {
 
 export function TeamMember({ name, role, image, imageAlt, bio, index = 0 }: TeamMemberProps) {
   return (
-    <article className="glass-panel interactive-lift group flex h-full flex-col overflow-hidden rounded-[1.75rem] focus-within:border-accent/40">
+    <article className="card-premium interactive-lift group flex h-full flex-col overflow-hidden rounded-[1.875rem] focus-within:ring-2 focus-within:ring-accent/30">
       <div className="relative aspect-[4/5] shrink-0 overflow-hidden bg-primary-soft sm:aspect-[5/6]">
         <Image
           src={image}
