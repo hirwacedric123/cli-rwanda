@@ -1,30 +1,45 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+
+const SPRING_BACK = [0.34, 1.56, 0.64, 1] as const;
+const EASE_IN = [0.4, 0, 1, 1] as const;
+
+const iconEnter = {
+  initial: { opacity: 0, rotate: -70, scale: 0.6, filter: "blur(3px)" },
+  animate: {
+    opacity: 1,
+    rotate: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { duration: 0.36, ease: SPRING_BACK },
+  },
+};
+
+const iconExit = {
+  exit: {
+    opacity: 0,
+    rotate: 70,
+    scale: 0.6,
+    filter: "blur(3px)",
+    transition: { duration: 0.2, ease: EASE_IN },
+  },
+};
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const btnStyle = {
-    background:
-      "linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.10) 60%, rgba(255,255,255,0.22) 100%) border-box",
-    border: "1px solid transparent",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.80), var(--shadow-xs)",
-  };
+  useEffect(() => { setMounted(true); }, []);
 
   if (!mounted) {
     return (
       <button
         type="button"
         aria-label="Toggle color theme"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl"
-        style={btnStyle}
+        className="icon-btn-glass inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl"
         disabled
       >
         <span className="h-5 w-5" aria-hidden />
@@ -35,15 +50,26 @@ export function ThemeToggle() {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl transition-all duration-260 hover:-translate-y-0.5 hover:text-accent active:translate-y-0"
-      style={btnStyle}
+      className="icon-btn-glass inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground backdrop-blur-xl"
+      whileHover={{ y: -2, scale: 1.06 }}
+      whileTap={{ y: 0, scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 420, damping: 18 }}
     >
-      {isDark ? <SunIcon /> : <MoonIcon />}
-    </button>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={isDark ? "sun" : "moon"}
+          className="flex"
+          {...iconEnter}
+          {...iconExit}
+        >
+          {isDark ? <SunIcon /> : <MoonIcon />}
+        </motion.span>
+      </AnimatePresence>
+    </motion.button>
   );
 }
 
