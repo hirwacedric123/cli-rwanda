@@ -4,8 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { nav, site } from "@/lib/content";
 import { ThemeToggle } from "./ThemeToggle";
+
+const EXPO = [0.16, 1, 0.3, 1] as const;
 
 function pathMatches(pathname: string, href: string) {
   const [path, hash] = href.split("#");
@@ -114,15 +117,9 @@ export function Header() {
       }`}
     >
       <div className="px-3 py-3 sm:px-4 sm:py-4">
-        {/* Main header bar — gradient border glass */}
+        {/* Main header bar */}
         <div
-          className="site-container-wide flex h-[var(--header-height)] items-center justify-between gap-3 rounded-[1.45rem] px-3 shadow-soft backdrop-blur-2xl sm:gap-4 sm:rounded-[1.7rem] sm:px-5"
-          style={{
-            background:
-              "linear-gradient(var(--header-panel), var(--header-panel)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.36) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 65%, rgba(255,255,255,0.16) 100%) border-box",
-            border: "1px solid transparent",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.65), var(--shadow)",
-          }}
+          className="header-bar site-container-wide flex h-[var(--header-height)] items-center justify-between gap-3 rounded-[1.45rem] px-3 backdrop-blur-2xl sm:gap-4 sm:rounded-[1.7rem] sm:px-5"
         >
           {/* Logo */}
           <Link
@@ -132,13 +129,7 @@ export function Header() {
             onClick={() => setOpen(false)}
           >
             <span
-              className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.9rem] sm:h-13 sm:w-13 sm:rounded-[1.05rem]"
-              style={{
-                background:
-                  "linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.60) 0%, rgba(255,255,255,0.20) 60%, rgba(255,255,255,0.35) 100%) border-box",
-                border: "1px solid transparent",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.90), var(--shadow-xs)",
-              }}
+              className="logo-plate-glass flex h-11 w-11 items-center justify-center overflow-hidden rounded-[0.9rem] sm:h-13 sm:w-13 sm:rounded-[1.05rem]"
             >
               <Image
                 src="/cli-logo-transparent.png"
@@ -159,15 +150,9 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Desktop nav — gradient border pill */}
+          {/* Desktop nav */}
           <nav
-            className="hidden items-center gap-0.5 rounded-full p-1 lg:flex"
-            style={{
-              background:
-                "linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.10) 45%, rgba(255,255,255,0.04) 65%, rgba(255,255,255,0.20) 100%) border-box",
-              border: "1px solid transparent",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.80), inset 0 -1px 0 rgba(0,0,0,0.04)",
-            }}
+            className="nav-pill hidden items-center gap-0.5 rounded-full p-1 lg:flex"
             aria-label="Primary"
           >
             {nav.map((item) => {
@@ -179,17 +164,9 @@ export function Header() {
                   onClick={() => handleNavClick(item.href)}
                   className={`rounded-full px-4 py-2 text-[0.8375rem] font-semibold tracking-[0.005em] transition-all duration-200 xl:px-5 xl:text-sm ${
                     active
-                      ? "bg-background text-primary shadow-xs"
-                      : "text-muted hover:bg-white/50 hover:text-foreground"
+                      ? "bg-background text-primary nav-item-active-shadow"
+                      : "text-muted hover:bg-white/30 dark:hover:bg-white/8 hover:text-foreground"
                   }`}
-                  style={
-                    active
-                      ? {
-                          boxShadow:
-                            "inset 0 1px 0 rgba(255,255,255,0.85), var(--shadow-xs)",
-                        }
-                      : undefined
-                  }
                   aria-current={active ? "page" : undefined}
                 >
                   {item.label}
@@ -207,91 +184,108 @@ export function Header() {
             >
               Get in touch
             </Link>
-            <button
+            {/* Hamburger — animated morph */}
+            <motion.button
               ref={toggleRef}
               type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-all duration-200 hover:text-accent lg:hidden"
-              style={{
-                background:
-                  "linear-gradient(rgba(255,255,255,0.60), rgba(255,255,255,0.60)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.40) 0%, rgba(255,255,255,0.10) 60%, rgba(255,255,255,0.22) 100%) border-box",
-                border: "1px solid transparent",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.80), var(--shadow-xs)",
-              }}
+              className="icon-btn-glass inline-flex h-10 w-10 items-center justify-center rounded-full text-foreground lg:hidden"
               aria-expanded={open}
               aria-controls={menuId}
               aria-label={open ? "Close menu" : "Open menu"}
               onClick={() => setOpen((v) => !v)}
+              whileHover={{ scale: 1.07 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 420, damping: 18 }}
             >
-              {open ? <CloseIcon /> : <MenuIcon />}
-            </button>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={open ? "close" : "menu"}
+                  className="flex"
+                  initial={{ opacity: 0, rotate: open ? -60 : 60, scale: 0.7 }}
+                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                  exit={{ opacity: 0, rotate: open ? 60 : -60, scale: 0.7 }}
+                  transition={{ duration: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
+                >
+                  {open ? <CloseIcon /> : <MenuIcon />}
+                </motion.span>
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
       </div>
 
       {/* Mobile overlay */}
-      <div
-        className={`fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[3px] transition-opacity duration-300 lg:hidden ${
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-        aria-hidden={!open}
-        onClick={() => setOpen(false)}
-      />
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-[3px] lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            aria-hidden
+            onClick={() => setOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Mobile menu panel */}
-      <div
-        id={menuId}
-        ref={panelRef}
-        className={`absolute inset-x-3 top-[calc(var(--header-height)+1.5rem)] z-50 origin-top transition-all duration-300 sm:inset-x-4 lg:hidden ${
-          open
-            ? "translate-y-0 scale-100 opacity-100"
-            : "pointer-events-none -translate-y-2 scale-[0.97] opacity-0"
-        }`}
-        aria-hidden={!open}
-      >
-        <nav
-          className="site-container-wide flex flex-col gap-1 rounded-[1.45rem] p-3"
-          style={{
-            background:
-              "linear-gradient(var(--header-panel), var(--header-panel)) padding-box, linear-gradient(145deg, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.03) 65%, rgba(255,255,255,0.18) 100%) border-box",
-            border: "1px solid transparent",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.70), var(--shadow-xl)",
-            backdropFilter: "blur(28px) saturate(150%)",
-            WebkitBackdropFilter: "blur(28px) saturate(150%)",
-          }}
-          aria-label="Mobile"
-        >
-          {nav.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className={`min-h-[var(--touch)] rounded-2xl px-4 py-3 text-base font-semibold tracking-[0.005em] transition-all duration-200 ${
-                  active
-                    ? "bg-background text-primary"
-                    : "text-foreground hover:bg-white/35"
-                }`}
-                style={
-                  active
-                    ? { boxShadow: "inset 0 1px 0 rgba(255,255,255,0.80), var(--shadow-xs)" }
-                    : undefined
-                }
-                aria-current={active ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          <Link
-            href="/contact"
-            onClick={() => handleNavClick("/contact")}
-            className="btn-primary mt-2 w-full"
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id={menuId}
+            ref={panelRef}
+            className="absolute inset-x-3 top-[calc(var(--header-height)+1.5rem)] z-50 origin-top sm:inset-x-4 lg:hidden"
+            initial={{ opacity: 0, y: -12, scale: 0.97, filter: "blur(5px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -8, scale: 0.97, filter: "blur(4px)" }}
+            transition={{ duration: 0.3, ease: EXPO }}
           >
-            Get in touch
-          </Link>
-        </nav>
-      </div>
+            <nav
+              className="mobile-menu-glass site-container-wide flex flex-col gap-1 rounded-[1.45rem] p-3"
+              aria-label="Mobile"
+            >
+              {nav.map((item, i) => {
+                const active = isActive(item.href);
+                return (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: -12, filter: "blur(3px)" }}
+                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                    transition={{ delay: 0.04 + i * 0.05, duration: 0.32, ease: EXPO }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`block min-h-[var(--touch)] rounded-2xl px-4 py-3 text-base font-semibold tracking-[0.005em] transition-all duration-200 ${
+                        active
+                          ? "bg-background text-primary mobile-item-active-shadow"
+                          : "text-foreground hover:bg-white/20 dark:hover:bg-white/8"
+                      }`}
+                      aria-current={active ? "page" : undefined}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+              <motion.div
+                initial={{ opacity: 0, x: -12, filter: "blur(3px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                transition={{ delay: 0.04 + nav.length * 0.05, duration: 0.32, ease: EXPO }}
+              >
+                <Link
+                  href="/contact"
+                  onClick={() => handleNavClick("/contact")}
+                  className="btn-primary mt-2 w-full"
+                >
+                  Get in touch
+                </Link>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
